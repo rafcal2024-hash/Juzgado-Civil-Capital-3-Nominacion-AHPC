@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}AHPC – Juzgado Civil 3° Nominación{% endblock %}</title>
+  <style>
+    :root {
+      --navy:   #0d1f35;
+      --navy2:  #162d4a;
+      --blue:   #1a5276;
+      --accent: #2e86c1;
+      --light:  #aed6f1;
+      --gold:   #d4ac0d;
+      --bg:     #f0f4f8;
+      --card:   #ffffff;
+      --text:   #1a2a3a;
+      --muted:  #7f8c8d;
+      --border: #c8d8e8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* NAV */
+    nav {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+      padding: 0 1.5rem;
+      display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,.35);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: .7rem;
+      padding: .9rem 1.2rem .9rem 0;
+      border-right: 1px solid rgba(255,255,255,.12);
+      margin-right: .8rem;
+      text-decoration: none;
+    }
+    .nav-brand .escudo { font-size: 1.6rem; }
+    .nav-brand-text { line-height: 1.1; }
+    .nav-brand-text .inst { font-size: .65rem; color: var(--light); letter-spacing: .04em; text-transform: uppercase; }
+    .nav-brand-text .juzgado { font-size: .85rem; font-weight: 700; color: #fff; }
+    nav a.nav-link {
+      color: rgba(255,255,255,.75); text-decoration: none;
+      padding: 1rem .85rem; font-size: .82rem; font-weight: 500;
+      transition: color .15s, background .15s;
+      letter-spacing: .02em;
+    }
+    nav a.nav-link:hover, nav a.nav-link.active { color: #fff; background: rgba(255,255,255,.08); }
+    .nav-spacer { flex: 1; }
+
+    /* HERO / PAGE HEADER */
+    .page-header {
+      background: linear-gradient(135deg, var(--navy2) 0%, var(--blue) 100%);
+      color: #fff; padding: 2rem 2rem 1.6rem;
+      border-bottom: 3px solid var(--gold);
+    }
+    .page-header h1 { font-size: 1.45rem; font-weight: 700; }
+    .page-header p  { font-size: .88rem; color: var(--light); margin-top: .3rem; }
+
+    /* LAYOUT */
+    .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem 1.5rem; }
+
+    /* CARDS */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    .card-header {
+      background: linear-gradient(90deg, var(--navy) 0%, var(--blue) 100%);
+      color: #fff; padding: .65rem 1rem; font-size: .83rem; font-weight: 600;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .card-body { padding: 1rem; }
+
+    /* STATS GRID */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 1.1rem 1rem; text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+      border-top: 3px solid var(--accent);
+    }
+    .stat-card .num { font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-card .lbl { font-size: .72rem; color: var(--muted); margin-top: .35rem; text-transform: uppercase; letter-spacing: .05em; }
+
+    /* TABLE */
+    .tbl-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    table thead th {
+      background: var(--navy); color: var(--light);
+      padding: .6rem .8rem; text-align: left; font-weight: 600;
+      letter-spacing: .04em; white-space: nowrap;
+    }
+    table tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+    table tbody tr:hover { background: #e8f0f8; }
+    table tbody td { padding: .5rem .8rem; vertical-align: top; }
+    table tbody td a { color: var(--accent); text-decoration: none; }
+    table tbody td a:hover { text-decoration: underline; }
+    .badge {
+      display: inline-block; padding: .15rem .5rem; border-radius: 12px;
+      font-size: .7rem; font-weight: 600; white-space: nowrap;
+    }
+    .badge-blue { background: #d0e8f8; color: var(--blue); }
+    .badge-navy { background: #d5dfe8; color: var(--navy); }
+    .badge-gold { background: #fef9e7; color: #7d6608; border: 1px solid #d4ac0d44; }
+
+    /* FORM */
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: .8rem; }
+    .form-group label { display: block; font-size: .75rem; font-weight: 600; color: var(--muted); margin-bottom: .3rem; text-transform: uppercase; letter-spacing: .04em; }
+    .form-group input, .form-group select {
+      width: 100%; padding: .55rem .75rem; border: 1px solid var(--border);
+      border-radius: 6px; font-size: .85rem; background: #fff; color: var(--text);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(46,134,193,.15);
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .55rem 1.1rem; border-radius: 6px; font-size: .83rem;
+      font-weight: 600; cursor: pointer; border: none; transition: all .15s;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--blue); }
+    .btn-secondary { background: #ecf0f1; color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: #dde4ea; }
+    .btn-outline { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+    .btn-outline:hover { background: var(--accent); color: #fff; }
+    .btn-sm { padding: .3rem .7rem; font-size: .75rem; }
+
+    /* AUTOCOMPLETE */
+    .ac-wrap { position: relative; }
+    .ac-dropdown {
+      position: absolute; top: 100%; left: 0; right: 0; z-index: 200;
+      background: #fff; border: 1px solid var(--border); border-top: none;
+      border-radius: 0 0 6px 6px; max-height: 220px; overflow-y: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    }
+    .ac-item { padding: .5rem .75rem; cursor: pointer; font-size: .83rem; }
+    .ac-item:hover, .ac-item.active { background: #e8f0f8; }
+    .ac-item small { color: var(--muted); font-size: .72rem; }
+
+    /* PAGINATION */
+    .pag { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: 1rem; }
+    .pag button {
+      padding: .3rem .7rem; border-radius: 5px; border: 1px solid var(--border);
+      background: #fff; font-size: .8rem; cursor: pointer; transition: all .1s;
+    }
+    .pag button:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .pag button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .pag button:disabled { opacity: .4; cursor: default; }
+
+    /* RESULT COUNT */
+    .result-info { font-size: .8rem; color: var(--muted); margin-bottom: .6rem; }
+    .loading { text-align: center; padding: 2rem; color: var(--muted); font-size: .9rem; }
+
+    /* CHART BAR (simple CSS bars) */
+    .bar-row { display: flex; align-items: center; gap: .6rem; margin-bottom: .45rem; font-size: .78rem; }
+    .bar-label { width: 160px; text-align: right; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+    .bar-track { flex: 1; background: #dde9f5; border-radius: 3px; height: 16px; }
+    .bar-fill  { background: linear-gradient(90deg, var(--accent), var(--blue)); border-radius: 3px; height: 100%; transition: width .4s; }
+    .bar-val   { width: 45px; font-weight: 600; color: var(--navy); }
+
+    /* DECADE CHART */
+    .decade-grid { display: flex; align-items: flex-end; gap: 6px; height: 140px; margin: .5rem 0; }
+    .decade-col  { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .decade-bar  { width: 100%; background: linear-gradient(180deg, var(--accent), var(--blue)); border-radius: 3px 3px 0 0; min-height: 4px; }
+    .decade-lbl  { font-size: .65rem; color: var(--muted); white-space: nowrap; }
+    .decade-num  { font-size: .65rem; color: var(--navy); font-weight: 700; }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,.5);
+      text-align: center; padding: 1rem; font-size: .75rem; margin-top: 3rem;
+    }
+    footer a { color: var(--light); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+      nav a.nav-link { padding: .7rem .5rem; font-size: .75rem; }
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="/">
+    <span class="escudo">⚖️</span>
+    <div class="nav-brand-text">
+      <div class="inst">AHPC · Archivo Histórico</div>
+      <div class="juzgado">Civil 3° Nominación</div>
+    </div>
+  </a>
+  <a class="nav-link {% if request.endpoint=='index' %}active{% endif %}" href="/">Inicio</a>
+  <a class="nav-link {% if request.endpoint=='buscar' %}active{% endif %}" href="/buscar">Buscar</a>
+  <a class="nav-link {% if request.endpoint=='estadisticas' %}active{% endif %}" href="/estadisticas">Estadísticas</a>
+</nav>
+
+{% block content %}{% endblock %}
+
+<footer>
+  <p>Archivo Histórico de la Provincia de Córdoba &mdash; Juzgado Civil Capital 3° Nominación (1888&ndash;1925)</p>
+  <p style="margin-top:.3rem">Índice onomástico de expedientes judiciales &bull; Uso exclusivamente académico e investigativo</p>
+</footer>
+</body>
+</html>

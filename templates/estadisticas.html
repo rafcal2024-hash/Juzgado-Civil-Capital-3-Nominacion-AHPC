@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Estadísticas – AHPC Civil 3°{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="container" style="padding-top:0;padding-bottom:0">
+    <h1>📊 Estadísticas del Fondo</h1>
+    <p>Juzgado Civil Capital 3° Nominación · 1888–1925</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats-grid" style="margin-bottom:1.5rem">
+    <div class="stat-card">
+      <div class="num">{{ "{:,}".format(total).replace(",",".") }}</div>
+      <div class="lbl">Total expedientes</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">{{ total_causas }}</div>
+      <div class="lbl">Tipos de causa</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">{{ total_legajos }}</div>
+      <div class="lbl">Legajos distintos</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">{{ por_decada|length }}</div>
+      <div class="lbl">Décadas cubiertas</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem" class="two-col">
+
+    <!-- DÉCADAS -->
+    <div class="card">
+      <div class="card-header">📅 Expedientes por década</div>
+      <div class="card-body">
+        {% set max_d = por_decada | map(attribute='total') | max if por_decada else 1 %}
+        {% for d in por_decada %}
+        <div class="bar-row">
+          <span class="bar-label" style="width:55px;text-align:right">{{ d.decada }}s</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:{{ (d.total / max_d * 100)|round|int }}%"></div>
+          </div>
+          <span class="bar-val">{{ d.total }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- TOP CAUSAS -->
+    <div class="card">
+      <div class="card-header">⚖️ Top 30 causas más frecuentes</div>
+      <div class="card-body" style="max-height:460px;overflow-y:auto">
+        {% set max_c = top_causas[0].total if top_causas else 1 %}
+        {% for c in top_causas %}
+        <div class="bar-row">
+          <a href="/causa/{{ c.causa|urlencode }}" class="bar-label" title="{{ c.causa }}" style="color:var(--text);text-decoration:none;font-size:.73rem">{{ c.causa }}</a>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:{{ (c.total / max_c * 100)|round|int }}%"></div>
+          </div>
+          <span class="bar-val">{{ c.total }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+@media (max-width:700px) {
+  .two-col { grid-template-columns: 1fr !important; }
+}
+</style>
+{% endblock %}

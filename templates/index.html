@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Inicio – AHPC Juzgado Civil 3° Nominación{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="container" style="padding-top:0;padding-bottom:0">
+    <h1>⚖️ Juzgado Civil Capital 3° Nominación</h1>
+    <p>Archivo Histórico de la Provincia de Córdoba &bull; Índice onomástico de expedientes (1888–1925)</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats-grid" style="margin-top:1.5rem">
+    <div class="stat-card">
+      <div class="num">{{ "{:,}".format(total).replace(",",".") }}</div>
+      <div class="lbl">Expedientes</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">{{ anio_inicio }}</div>
+      <div class="lbl">Año inicial</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">{{ anio_fin }}</div>
+      <div class="lbl">Año final</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">{{ causas }}</div>
+      <div class="lbl">Tipos de causa</div>
+    </div>
+  </div>
+
+  <!-- QUICK SEARCH -->
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-header">🔍 Búsqueda rápida</div>
+    <div class="card-body">
+      <form action="/buscar" method="get" style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end">
+        <div class="form-group" style="flex:1;min-width:200px">
+          <label>Partes / apellido</label>
+          <input type="text" name="partes" placeholder="Ej: García, López…">
+        </div>
+        <div class="form-group" style="flex:1;min-width:200px">
+          <label>Causa</label>
+          <input type="text" name="causa" placeholder="Ej: Divorcio, Sucesión…">
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar →</button>
+      </form>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem" class="two-col">
+
+    <!-- TOP CAUSAS -->
+    <div class="card">
+      <div class="card-header">📂 Causas más frecuentes</div>
+      <div class="card-body">
+        {% set max_t = top_causas[0].t if top_causas else 1 %}
+        {% for c in top_causas %}
+        <div class="bar-row">
+          <a href="/causa/{{ c.causa|urlencode }}" class="bar-label" title="{{ c.causa }}" style="color:var(--text);text-decoration:none;font-size:.75rem">{{ c.causa }}</a>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:{{ (c.t / max_t * 100)|round|int }}%"></div>
+          </div>
+          <span class="bar-val">{{ c.t }}</span>
+        </div>
+        {% endfor %}
+        <div style="margin-top:.8rem">
+          <a href="/estadisticas" class="btn btn-outline btn-sm">Ver todas las estadísticas →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- POR DÉCADAS -->
+    <div class="card">
+      <div class="card-header">📅 Distribución por décadas</div>
+      <div class="card-body">
+        {% if por_decada %}
+          {% set max_d = por_decada | map(attribute='t') | max %}
+          <div class="decade-grid">
+            {% for d in por_decada %}
+            <div class="decade-col">
+              <div class="decade-num">{{ d.t }}</div>
+              <div class="decade-bar" style="height:{{ (d.t / max_d * 110)|round|int }}px"></div>
+              <div class="decade-lbl">{{ d.decada }}s</div>
+            </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <p style="font-size:.75rem;color:var(--muted);margin-top:.6rem">
+          El período cubre desde {{ anio_inicio }} hasta {{ anio_fin }}, con mayor concentración en la primera
+          y segunda décadas del siglo XX.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INFO BOX -->
+  <div class="card">
+    <div class="card-header">ℹ️ Acerca de este fondo documental</div>
+    <div class="card-body" style="font-size:.84rem;line-height:1.7;color:#2c3e50">
+      <p>Este índice onomástico corresponde al fondo <strong>Juzgado Civil Capital 3° Nominación</strong> del
+      <strong>Archivo Histórico de la Provincia de Córdoba (AHPC)</strong>. Comprende {{ "{:,}".format(total).replace(",",".") }} expedientes
+      judiciales del período <strong>{{ anio_inicio }}–{{ anio_fin }}</strong>, organizados de forma onomástica por las
+      partes intervinientes.</p>
+      <p style="margin-top:.6rem">Los expedientes incluyen causas de diversa índole civil: sucesiones,
+      divorcios, declaratorias, autorizaciones, divisiones de bienes, entre otras. Este recurso está destinado
+      a la investigación histórica, genealógica y jurídica.</p>
+      <div style="margin-top:.8rem;display:flex;gap:.6rem;flex-wrap:wrap">
+        <a href="/buscar" class="btn btn-primary">🔍 Buscar expedientes</a>
+        <a href="/estadisticas" class="btn btn-secondary">📊 Ver estadísticas</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+@media (max-width:700px) {
+  .two-col { grid-template-columns: 1fr !important; }
+}
+</style>
+{% endblock %}

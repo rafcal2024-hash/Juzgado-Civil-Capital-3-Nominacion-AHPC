@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ causa }} – AHPC Civil 3°{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="container" style="padding-top:0;padding-bottom:0">
+    <h1>📂 Causa: {{ causa }}</h1>
+    <p>{{ registros|length }} expediente{{ 's' if registros|length != 1 }} · Juzgado Civil Capital 3° Nominación</p>
+  </div>
+</div>
+
+<div class="container">
+  <div style="margin-bottom:1rem">
+    <a href="/buscar" class="btn btn-secondary btn-sm">← Volver a búsqueda</a>
+    <a href="/buscar?causa={{ causa|urlencode }}" class="btn btn-outline btn-sm">🔍 Buscar variaciones de esta causa</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Expedientes de la causa "{{ causa }}"</div>
+    <div class="card-body" style="padding:.6rem">
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Año</th><th>Legajo</th><th>Expte.</th><th>Partes</th><th></th></tr>
+          </thead>
+          <tbody>
+            {% for r in registros %}
+            <tr>
+              <td><span class="badge badge-navy">{{ r.anio or '—' }}</span></td>
+              <td>{{ r.legajo or '' }}</td>
+              <td>{{ r.expediente or '' }}</td>
+              <td>{{ r.partes or '' }}</td>
+              <td><a href="/detalle/{{ r.id }}" class="btn btn-outline btn-sm">Ver →</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

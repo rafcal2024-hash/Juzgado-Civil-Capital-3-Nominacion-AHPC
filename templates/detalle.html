@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Detalle – {{ reg.partes[:40] }}{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="container" style="padding-top:0;padding-bottom:0">
+    <h1>📋 Detalle del Expediente</h1>
+    <p>Juzgado Civil Capital 3° Nominación · Registro #{{ reg.id }}</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <div style="margin-bottom:1rem">
+    <a href="/buscar" class="btn btn-secondary btn-sm">← Volver a búsqueda</a>
+    <a href="/buscar?partes={{ apellido|urlencode }}" class="btn btn-outline btn-sm">🔍 Buscar más de "{{ apellido }}"</a>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="card" style="margin-bottom:1.2rem">
+    <div class="card-header">📄 Datos del expediente</div>
+    <div class="card-body">
+      <table style="font-size:.88rem">
+        <tbody>
+          <tr>
+            <td style="width:140px;font-weight:600;color:var(--muted);padding:.5rem .8rem;white-space:nowrap">Partes</td>
+            <td style="padding:.5rem .8rem;font-size:1rem;font-weight:600">{{ reg.partes or '—' }}</td>
+          </tr>
+          <tr style="background:#f5f8fb">
+            <td style="font-weight:600;color:var(--muted);padding:.5rem .8rem">Causa</td>
+            <td style="padding:.5rem .8rem">
+              {% if reg.causa %}
+              <a href="/causa/{{ reg.causa|urlencode }}" class="badge badge-blue" style="font-size:.82rem">{{ reg.causa }}</a>
+              {% else %}—{% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--muted);padding:.5rem .8rem">Año</td>
+            <td style="padding:.5rem .8rem"><span class="badge badge-navy">{{ reg.anio or '—' }}</span></td>
+          </tr>
+          <tr style="background:#f5f8fb">
+            <td style="font-weight:600;color:var(--muted);padding:.5rem .8rem">Legajo</td>
+            <td style="padding:.5rem .8rem">{{ reg.legajo or '—' }}</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--muted);padding:.5rem .8rem">Expediente</td>
+            <td style="padding:.5rem .8rem">{{ reg.expediente or '—' }}</td>
+          </tr>
+          <tr style="background:#f5f8fb">
+            <td style="font-weight:600;color:var(--muted);padding:.5rem .8rem">Serie</td>
+            <td style="padding:.5rem .8rem">Juzgado Civil Capital 3° Nominación</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:var(--muted);padding:.5rem .8rem">Subfondo</td>
+            <td style="padding:.5rem .8rem">Juzgados Civiles · Poder Judicial de la Pcia. de Córdoba</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- OTHER RECORDS WITH SAME APELLIDO -->
+  {% if otros_partes %}
+  <div class="card">
+    <div class="card-header">👥 Otros expedientes con el mismo apellido: "{{ apellido }}" ({{ otros_partes|length }} resultado{{ 's' if otros_partes|length != 1 }})</div>
+    <div class="card-body" style="padding:.6rem">
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Año</th><th>Legajo</th><th>Expte.</th><th>Partes</th><th>Causa</th><th></th></tr>
+          </thead>
+          <tbody>
+            {% for o in otros_partes %}
+            <tr>
+              <td><span class="badge badge-navy">{{ o.anio or '—' }}</span></td>
+              <td>{{ o.legajo or '' }}</td>
+              <td>{{ o.expediente or '' }}</td>
+              <td>{{ o.partes or '' }}</td>
+              <td><a href="/causa/{{ o.causa|urlencode }}">{{ o.causa or '' }}</a></td>
+              <td><a href="/detalle/{{ o.id }}" class="btn btn-outline btn-sm">Ver →</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
