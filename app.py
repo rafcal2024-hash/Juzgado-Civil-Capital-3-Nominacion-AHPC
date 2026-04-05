@@ -237,7 +237,6 @@ def exportar_pdf():
     resp.headers['Content-Type'] = 'application/pdf'
     resp.headers['Content-Disposition'] = 'inline; filename=ahpc_civil3.pdf'
     return resp
-
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5006))
-app.run(debug=False, host='0.0.0.0', port=port)
+    app.run(debug=False, host='0.0.0.0', port=port)  # ← 4 espacios
